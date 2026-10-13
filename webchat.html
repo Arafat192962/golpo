@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090711">
+<meta name="description" content="Our Little World — Just You, Just Me">
+<title>Our Little World ♡</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+
+<!-- Firebase SDKs (v9 Compat) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<style>
+:root {
+  --bg: #090711;
+  --panel: #171020;
+  --header-bg: rgba(23, 16, 32, 0.95);
+  --text: #fff3fa;
+  --muted: #c3b2c6;
+  --pink: #f3a4ca;
+  --border: rgba(255,213,237,.15);
+  --bubble: #291a32;
+  --mine: #773d68;
+  --input-bg: #090711;
+  --icon-hover: rgba(243, 164, 202, 0.18);
+  --shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+body.light {
+  --bg: #f8f2f7;
+  --panel: #ffffff;
+  --header-bg: rgba(255, 255, 255, 0.95);
+  --text: #2d1a29;
+  --muted: #786273;
+  --pink: #d9629b;
+  --border: rgba(217, 98, 155, 0.22);
+  --bubble: #f0e2ed;
+  --mine: #f3a4ca;
+  --input-bg: #f9f3f8;
+  --icon-hover: rgba(217, 98, 155, 0.15);
+  --shadow: 0 20px 50px rgba(217, 98, 155, 0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  color: var(--text);
+  font-family: "Hind Siliguri", sans-serif;
+  background: var(--bg);
+  transition: background 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+}
+
+button, input, textarea { font: inherit; color: var(--text); }
+button { cursor: pointer; }
+.hidden { display: none !important; }
+
+/* Toggle Theme Switch Button Style */
+.theme-btn {
+  width: 56px;
+  height: 30px;
+  border: none;
+  border-radius: 30px;
+  background: #291a32;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  padding: 3px;
+  transition: background 0.3s;
+  display: flex;
+  align-items: center;
+}
+
+.theme-btn .circle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--pink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  transition: transform 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.theme-btn.active {
+  background: #f0e2ed;
+}
+
+.theme-btn.active .circle {
+  transform: translateX(26px);
+}
+
+/* Page Transition Animation */
+.page-view {
+  animation: fadeInScale 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.98) translateY(6px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* 1ST PAGE: HOMEPAGE */
+.home {
+  width: min(1000px, calc(100% - 32px));
+  min-height: 100vh;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 30px 0;
+}
+
+.topline {
+  text-align: center;
+  color: var(--muted);
+  letter-spacing: 4px;
+  font-size: 11px;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1.08fr .92fr;
+  gap: 36px;
+  align-items: center;
+}
+
+.eyebrow { color: var(--pink); margin-bottom: 14px; font-weight: 600; }
+
+h1 {
+  font: 500 clamp(42px,5.4vw,68px)/1.08 "Playfair Display",serif;
+  color: var(--text);
+  letter-spacing: -1px;
+}
+
+h1 span { display: block; color: var(--pink); font-style: italic; }
+
+.description {
+  margin-top: 18px;
+  max-width: 420px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.start-wrap { margin-top: 28px; }
+
+.primary {
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 13px 28px;
+  color: #25101f;
+  background: linear-gradient(135deg,#ffd7eb,#e99ac6);
+  font-weight: 700;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(243, 164, 202, 0.3);
+}
+
+.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(243, 164, 202, 0.45);
+}
+
+.full { width: 100%; }
+
+.under-button {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.love-card {
+  min-height: 360px;
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  text-align: center;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.card-label { color: var(--muted); font-size: 10px; letter-spacing: 3px; }
+.heart { font-size: 95px; color: var(--pink); margin: 20px 0; animation: floatHeart 3.5s ease-in-out infinite; }
+.quote { font: italic 23px "Playfair Display",serif; color: var(--text); }
+.card-sub { margin-top: 8px; color: var(--muted); font-size: 13px; }
+.card-bottom { margin-top: 22px; color: var(--pink); font-size: 11px; letter-spacing: 2px; }
+.footer { text-align: center; margin-top: 26px; color: var(--muted); font-size: 11px; }
+
+@keyframes floatHeart {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-10px) scale(1.05); }
+}
+
+/* 2ND PAGE: LOGIN PAGE */
+#loginPage {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.auth-card {
+  width: min(420px,100%);
+  padding: 32px;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.brand {
+  text-align: center;
+  font: italic 29px "Playfair Display",serif;
+  color: var(--pink);
+}
+
+.sub {
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  margin: 6px 0 24px;
+}
+
+.field { display: block; margin: 15px 0; }
+.field span { display: block; color: var(--muted); font-size: 13px; margin-bottom: 6px; font-weight: 500; }
+
+.field input, .composer textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--input-bg);
+  color: var(--text);
+  transition: border-color 0.3s;
+}
+
+.field input:focus, .composer textarea:focus {
+  border-color: var(--pink);
+}
+
+.text-button {
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  border: 0;
+  color: var(--pink);
+  margin-top: 6px;
+  font-size: 13px;
+}
+
+.secondary-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--pink);
+  font-weight: 600;
+  margin-top: 12px;
+}
+
+.secondary-btn:hover { background: var(--icon-hover); }
+.error { color: #ff9aa8; font-size: 12px; margin: 10px 0; }
+
+/* 3RD PAGE: CHAT PAGE */
+#chatPage {
+  width: min(1000px,100%);
+  height: 100vh;
+  height: 100dvh;
+  min-height: 500px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  background: var(--header-bg);
+}
+
+.user-info { flex: 1; min-width: 0; }
+.title-wrap { display: flex; align-items: center; gap: 6px; }
+.user-info strong { overflow-wrap: anywhere; font-size: 16px; color: var(--text); }
+.edit-title-btn { background: none; border: none; color: var(--muted); font-size: 13px; cursor: pointer; transition: color 0.2s; }
+.edit-title-btn:hover { color: var(--pink); }
+
+.status { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; margin-top: 3px; }
+.online-dot { width: 8px; height: 8px; border-radius: 50%; background: #48bb78; display: inline-block; box-shadow: 0 0 8px #48bb78; }
+.offline-dot { width: 8px; height: 8px; border-radius: 50%; background: #a0aec0; display: inline-block; }
+
+.tools { display: flex; align-items: center; gap: 10px; }
+.icon-btn {
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--input-bg);
+  color: var(--text);
+  min-width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+  transition: all 0.2s;
+}
+
+.icon-btn:hover {
+  background: var(--icon-hover);
+  border-color: var(--pink);
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--bg);
+}
+
+.message { max-width: 80%; align-self: flex-start; position: relative; }
+.message.mine { align-self: flex-end; }
+.sender { font-size: 10px; color: var(--muted); margin: 0 7px 3px; }
+
+.bubble {
+  background: var(--bubble);
+  border: 1px solid var(--border);
+  border-radius: 16px 16px 16px 4px;
+  padding: 10px 14px;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  position: relative;
+  color: var(--text);
+}
+
+.mine .bubble {
+  background: var(--mine);
+  border-radius: 16px 16px 4px 16px;
+  color: #ffffff;
+}
+
+body.light .mine .bubble {
+  color: #25101f;
+}
+
+.msg-meta { font-size: 10px; color: var(--muted); text-align: right; margin-top: 4px; }
+
+/* Hover Reactions Picker */
+.react-picker {
+  display: none;
+  position: absolute;
+  top: -34px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 3px 8px;
+  gap: 8px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  z-index: 5;
+}
+.message:hover .react-picker { display: flex; }
+.message.mine .react-picker { right: 0; }
+.message:not(.mine) .react-picker { left: 0; }
+
+.react-btn { background: none; border: none; font-size: 15px; cursor: pointer; transition: transform 0.15s ease; }
+.react-btn:hover { transform: scale(1.35); }
+
+.reactions-badge { font-size: 12px; margin-top: 3px; display: flex; gap: 4px; }
+
+/* Seen Profile Avatar Render */
+.seen-box {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 3px;
+}
+
+.seen-avatar {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#ffd7eb,#e99ac6);
+  color: #25101f;
+  font-size: 9px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.typing { height: 22px; padding: 0 18px; color: var(--pink); font-size: 12px; font-style: italic; background: var(--bg); }
+
+.composer-area {
+  border-top: 1px solid var(--border);
+  padding: 12px;
+  background: var(--panel);
+}
+
+.composer { display: flex; align-items: flex-end; gap: 8px; }
+.composer textarea { resize: none; min-height: 44px; max-height: 120px; flex: 1; border-radius: 12px; background: var(--input-bg); }
+.send { height: 44px; min-width: 48px; border: 0; border-radius: 12px; background: linear-gradient(135deg,#ffd7eb,#e99ac6); color: #25101f; font-weight: bold; font-size: 16px; }
+.file-link { color: var(--pink); }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--panel); color: var(--text); border: 1px solid var(--border); border-radius: 14px; padding: 10px 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 10; font-size: 13px; max-width: 90%; }
+
+@media(max-width:700px) {
+  .home { justify-content: flex-start; padding: 24px 0; }
+  .layout { grid-template-columns: 1fr; gap: 22px; }
+  .love-card { min-height: 260px; }
+  .heart { font-size: 75px; margin: 12px 0; }
+  #chatPage { border-left: 0; border-right: 0; }
+  .messages { padding: 12px; }
+  .message { max-width: 88%; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- 1ST PAGE: HOMEPAGE -->
+<main id="homePage" class="home page-view">
+  <div class="topline">A LITTLE WORLD OF US</div>
+  <section class="layout">
+    <div>
+      <div class="eyebrow">♡ &nbsp; just you, just me</div>
+      <h1>our little <span>world.</span></h1>
+      <p class="description">
+        পৃথিবীটা যত বড়ই হোক, আমাদের জন্য থাকুক ছোট্ট একটা নিজস্ব পৃথিবী।
+      </p>
+      <div class="start-wrap">
+        <button class="primary" id="startBtn">আমাদের গল্প শুরু হোক ♡</button>
+        <p class="under-button">a place where our hearts feel at home</p>
+      </div>
+    </div>
+
+    <div class="love-card">
+      <div class="card-label">OUR LITTLE UNIVERSE</div>
+      <div class="heart">♡</div>
+      <div class="quote">“You feel like home.”</div>
+      <div class="card-sub">তুমি, আমি, আর আমাদের ছোট্ট পৃথিবী</div>
+      <div class="card-bottom">FOREVER · US</div>
+    </div>
+  </section>
+  <footer class="footer">made with ♡ and a little bit of magic</footer>
+</main>
+
+<!-- 2ND PAGE: LOGIN PAGE -->
+<section id="loginPage" class="hidden page-view">
+  <div class="auth-card">
+    <div class="brand">our little world ♡</div>
+    <p class="sub">Just You, Just Me ♡</p>
+
+    <form id="loginForm">
+      <label class="field">
+        <span>Name</span>
+        <input id="nameInput" maxlength="40" placeholder="" required>
+      </label>
+      <label class="field">
+        <span>Room ID Number</span>
+        <input id="roomInput" maxlength="40" placeholder="" required>
+      </label>
+      <label class="field">
+        <span>Password / PIN</span>
+        <input id="pinInput" type="password" minlength="4" maxlength="64" placeholder="" required>
+      </label>
+
+      <div id="loginError" class="error"></div>
+      <button class="primary full" type="submit">চ্যাটে প্রবেশ করো ♡</button>
+      <button class="secondary-btn" id="createRoomBtn" type="button">+ নতুন রুম আইডি তৈরি করো</button>
+      <button class="text-button" id="backBtn" type="button">← হোমপেজে ফিরে যাও</button>
+    </form>
+  </div>
+</section>
+
+<!-- 3RD PAGE: CHAT PAGE -->
+<section id="chatPage" class="hidden page-view">
+  <header class="chat-header">
+    <div class="user-info">
+      <div class="title-wrap">
+        <strong id="roomTitle">Loading...</strong>
+        <button class="edit-title-btn" id="editTitleBtn" title="Change Chat Name">✏️</button>
+      </div>
+      <div class="status" id="connectionStatus"><span class="offline-dot"></span> Checking status...</div>
+    </div>
+    <div class="tools">
+      <button class="icon-btn" id="shareBtn" title="Share Room Link">🔗</button>
+      
+      <!-- Custom Toggle Switch Theme Button with 🔆 & 🌙 -->
+      <button class="theme-btn" id="themeBtn" aria-label="থিম পরিবর্তন করুন" aria-pressed="false">
+        <span class="circle">🌙</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="messages" id="messages"></div>
+
+  <div class="typing" id="typingLine"></div>
+
+  <div class="composer-area">
+    <form class="composer" id="messageForm">
+      <button type="button" class="icon-btn" id="fileBtn" title="Attach File">＋</button>
+      <input id="fileInput" type="file" class="hidden" accept="image/*,.pdf,.txt,.doc,.docx">
+      <textarea id="messageInput" rows="1" maxlength="5000" placeholder="Type a message..."></textarea>
+      <button class="send" type="submit">➤</button>
+    </form>
+  </div>
+</section>
+
+<div id="toast" class="toast hidden" role="status"></div>
+
+<script>
+"use strict";
+
+// Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAtBkyuFr1XNAz_h4HOTiaELvnlrblZJWc",
+  authDomain: "my-chat-app-28204.firebaseapp.com",
+  databaseURL: "https://my-chat-app-28204-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "my-chat-app-28204",
+  storageBucket: "my-chat-app-28204.firebasestorage.app",
+  messagingSenderId: "1016811880144",
+  appId: "1:1016811880144:web:0c07aa5f9c2ee99f4ee8d5"
+};
+
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+const $ = id => document.getElementById(id);
+const state = {
+  name: "",
+  room: "",
+  pin: "",
+  messages: [],
+  lastChatPartnerName: "",
+  myUserId: "user_" + Math.random().toString(36).substr(2, 7)
+};
+
+let roomRef = null;
+let typingTimeout = null;
+let intersectionObserver = null;
+
+// Page Router Engine
+function showPage(pageId) {
+  ["homePage", "loginPage", "chatPage"].forEach(id => {
+    const el = $(id);
+    if (id === pageId) {
+      el.classList.remove("hidden");
+      el.classList.add("page-view");
+    } else {
+      el.classList.add("hidden");
+      el.classList.remove("page-view");
+    }
+  });
+}
+
+let toastTimer;
+function toast(message) {
+  $("toast").textContent = message;
+  $("toast").classList.remove("hidden");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => $("toast").classList.add("hidden"), 2600);
+}
+
+$("startBtn").onclick = () => {
+  showPage("loginPage");
+  $("nameInput").focus();
+};
+
+$("backBtn").onclick = () => showPage("homePage");
+
+// Create Room ID with Custom Initial Chat Name Logic
+$("createRoomBtn").onclick = () => {
+  const newRoomId = "room_" + Math.floor(100000 + Math.random() * 900000);
+  $("roomInput").value = newRoomId;
+  $("loginError").textContent = "";
+
+  const customChatName = prompt("Enter Chat Name for this Room:");
+  if (customChatName && customChatName.trim()) {
+    database.ref(`chatNames/${newRoomId}`).set(customChatName.trim());
+  }
+
+  toast("New Room ID generated!");
+  $("pinInput").focus();
+};
+
+(function checkUrlParam() {
+  const urlRoom = new URLSearchParams(location.search).get("room");
+  if (urlRoom) {
+    $("roomInput").value = urlRoom;
+    showPage("loginPage");
+  }
+})();
+
+$("loginForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  state.name = $("nameInput").value.trim();
+  state.room = $("roomInput").value.trim();
+  state.pin = $("pinInput").value;
+
+  if (!state.name || !state.room || state.pin.length < 4) {
+    $("loginError").textContent = "Please fill in all details correctly.";
+    return;
+  }
+
+  const passRef = database.ref(`passwords/${state.room}`);
+  const passSnap = await passRef.get();
+
+  if (passSnap.exists()) {
+    if (passSnap.val() !== state.pin) {
+      $("loginError").textContent = "Incorrect Room ID or Password.";
+      return;
+    }
+  } else {
+    await passRef.set(state.pin);
+  }
+
+  enterChat();
+});
+
+function enterChat() {
+  showPage("chatPage");
+
+  roomRef = database.ref(`chats/${state.room}`);
+
+  // Fetch Custom Chat Title (Defaults to Room ID if not provided)
+  database.ref(`chatNames/${state.room}`).on("value", snap => {
+    $("roomTitle").textContent = snap.val() || state.room;
+  });
+
+  // Setup Robust Real-time Presence Engine
+  setupPresenceSystem();
+
+  // Real-time Typing Status Listener in English
+  database.ref(`typing/${state.room}`).on("value", snap => {
+    const typers = snap.val() || {};
+    const otherTypers = [];
+
+    for (let id in typers) {
+      if (id !== state.myUserId && typers[id]) {
+        otherTypers.push(typers[id]);
+      }
+    }
+
+    if (otherTypers.length > 0) {
+      $("typingLine").textContent = `${otherTypers.join(", ")} is typing...`;
+    } else {
+      $("typingLine").textContent = "";
+    }
+  });
+
+  // Setup Intersection Observer for Exact Message Seen
+  setupIntersectionObserver();
+
+  // Real-time Messages Sync & Smart Last Chat Partner Detection
+  roomRef.on("value", snap => {
+    const data = snap.val() || {};
+    state.messages = [];
+    
+    let lastPartner = "";
+    for (let key in data) {
+      const msg = data[key];
+      state.messages.push({ id: key, ...msg });
+      
+      if (msg.sender && msg.sender !== state.name) {
+        lastPartner = msg.sender;
+      }
+    }
+
+    if (lastPartner) {
+      state.lastChatPartnerName = lastPartner;
+    }
+
+    renderMessages();
+  });
+
+  $("messageInput").focus();
+}
+
+// Presence & Last Active Logic for Last Contacted Person
+function setupPresenceSystem() {
+  const myPresenceRef = database.ref(`presence/${state.room}/${state.myUserId}`);
+  const connectedRef = database.ref(".info/connected");
+
+  connectedRef.on("value", snap => {
+    if (snap.val() === true) {
+      myPresenceRef.onDisconnect().set({
+        name: state.name,
+        online: false,
+        lastActive: firebase.database.ServerValue.TIMESTAMP
+      }).then(() => {
+        myPresenceRef.set({
+          name: state.name,
+          online: true,
+          lastActive: firebase.database.ServerValue.TIMESTAMP
+        });
+      });
+    }
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      myPresenceRef.update({
+        online: false,
+        lastActive: firebase.database.ServerValue.TIMESTAMP
+      });
+    } else {
+      myPresenceRef.update({
+        online: true,
+        lastActive: firebase.database.ServerValue.TIMESTAMP
+      });
+    }
+  });
+
+  database.ref(`presence/${state.room}`).on("value", snap => {
+    const users = snap.val() || {};
+    let targetUser = null;
+
+    if (state.lastChatPartnerName) {
+      for (let id in users) {
+        if (users[id].name === state.lastChatPartnerName && users[id].name !== state.name) {
+          targetUser = users[id];
+          break;
+        }
+      }
+    }
+
+    if (!targetUser) {
+      for (let id in users) {
+        if (users[id].name !== state.name) {
+          targetUser = users[id];
+          break;
+        }
+      }
+    }
+
+    if (targetUser) {
+      if (targetUser.online === true) {
+        $("connectionStatus").innerHTML = `<span class="online-dot"></span> ${targetUser.name} is Online`;
+      } else if (targetUser.lastActive) {
+        $("connectionStatus").innerHTML = `<span class="offline-dot"></span> ${targetUser.name} · Last active: ${formatLastActive(targetUser.lastActive)}`;
+      } else {
+        $("connectionStatus").innerHTML = `<span class="offline-dot"></span> ${targetUser.name} is Offline`;
+      }
+    } else {
+      $("connectionStatus").innerHTML = `<span class="online-dot"></span> You are in room`;
+    }
+  });
+}
+
+function setupIntersectionObserver() {
+  if (intersectionObserver) intersectionObserver.disconnect();
+
+  intersectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const msgId = entry.target.getAttribute("data-msg-id");
+        const sender = entry.target.getAttribute("data-sender");
+
+        if (msgId && sender !== state.name) {
+          database.ref(`chats/${state.room}/${msgId}/seenBy/${state.myUserId}`).set(state.name);
+        }
+      }
+    });
+  }, { threshold: 0.6 });
+}
+
+function formatLastActive(timestamp) {
+  if (!timestamp) return "a while ago";
+  const date = new Date(timestamp);
+  const now = new Date();
+  const isToday = date.toDateString() === now.toDateString();
+
+  const timeStr = date.toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit', hour12: true });
+  if (isToday) {
+    return timeStr;
+  }
+  return `${date.toLocaleDateString("en-US", { month: 'short', day: 'numeric' })} at ${timeStr}`;
+}
+
+function timeText(time) {
+  if (!time) return "";
+  return new Date(time).toLocaleTimeString("en-US", {
+    hour: "2-digit", minute: "2-digit", hour12: true
+  });
+}
+
+function renderMessages() {
+  const container = $("messages");
+  container.innerHTML = "";
+
+  state.messages.forEach(message => {
+    const isMine = message.sender === state.name;
+    const article = document.createElement("article");
+    article.className = "message" + (isMine ? " mine" : "");
+    article.setAttribute("data-msg-id", message.id);
+    article.setAttribute("data-sender", message.sender);
+
+    const sender = document.createElement("div");
+    sender.className = "sender";
+    sender.textContent = isMine ? "You" : message.sender;
+    article.appendChild(sender);
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+
+    const reactPicker = document.createElement("div");
+    reactPicker.className = "react-picker";
+    ["❤️", "😢", "😂", "😡", "😮"].forEach(emo => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "react-btn";
+      btn.textContent = emo;
+      btn.onclick = () => toggleReact(message.id, emo);
+      reactPicker.appendChild(btn);
+    });
+    bubble.appendChild(reactPicker);
+
+    if (message.text) {
+      const text = document.createElement("span");
+      text.textContent = message.text;
+      bubble.appendChild(text);
+    }
+
+    if (message.file) {
+      if (message.file.type.startsWith("image/")) {
+        const image = document.createElement("img");
+        image.src = message.file.data;
+        image.alt = message.file.name;
+        image.style.cssText = "display:block;max-width:100%;max-height:230px;margin-top:6px;border-radius:9px";
+        bubble.appendChild(image);
+      } else {
+        const link = document.createElement("a");
+        link.className = "file-link";
+        link.href = message.file.data;
+        link.download = message.file.name;
+        link.textContent = "📎 " + message.file.name;
+        bubble.appendChild(link);
+      }
+    }
+
+    article.appendChild(bubble);
+
+    const meta = document.createElement("div");
+    meta.className = "msg-meta";
+    meta.textContent = timeText(message.time);
+    article.appendChild(meta);
+
+    if (message.reactions) {
+      const reactionsDiv = document.createElement("div");
+      reactionsDiv.className = "reactions-badge";
+      for (let uid in message.reactions) {
+        reactionsDiv.innerHTML += `<span>${message.reactions[uid]}</span>`;
+      }
+      article.appendChild(reactionsDiv);
+    }
+
+    if (isMine && message.seenBy) {
+      const seenBox = document.createElement("div");
+      seenBox.className = "seen-box";
+
+      for (let uid in message.seenBy) {
+        if (uid !== state.myUserId) {
+          const viewerName = message.seenBy[uid];
+          const seenAvatar = document.createElement("div");
+          seenAvatar.className = "seen-avatar";
+          seenAvatar.textContent = viewerName.charAt(0).toUpperCase();
+          seenAvatar.title = `Seen by ${viewerName}`;
+          seenBox.appendChild(seenAvatar);
+        }
+      }
+      article.appendChild(seenBox);
+    }
+
+    container.appendChild(article);
+
+    if (!isMine && intersectionObserver) {
+      intersectionObserver.observe(article);
+    }
+  });
+
+  container.scrollTop = container.scrollHeight;
+}
+
+async function sendMessage(text = "", file = null) {
+  if (!text.trim() && !file) return;
+
+  const msgData = {
+    sender: state.name,
+    text: text.trim(),
+    time: Date.now(),
+    file: file || null
+  };
+
+  await roomRef.push(msgData);
+
+  database.ref(`typing/${state.room}/${state.myUserId}`).remove();
+  $("messageInput").value = "";
+  $("messageInput").style.height = "44px";
+}
+
+$("messageForm").addEventListener("submit", event => {
+  event.preventDefault();
+  sendMessage($("messageInput").value);
+});
+
+$("messageInput").addEventListener("keydown", event => {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    $("messageForm").requestSubmit();
+  }
+});
+
+$("messageInput").addEventListener("input", () => {
+  const input = $("messageInput");
+  input.style.height = "auto";
+  input.style.height = Math.min(input.scrollHeight, 120) + "px";
+
+  const typingRef = database.ref(`typing/${state.room}/${state.myUserId}`);
+  if (input.value.trim()) {
+    typingRef.set(state.name);
+    clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(() => typingRef.remove(), 2000);
+  } else {
+    typingRef.remove();
+  }
+});
+
+async function toggleReact(msgId, emoji) {
+  const reactRef = database.ref(`chats/${state.room}/${msgId}/reactions/${state.myUserId}`);
+  const snap = await reactRef.get();
+
+  if (snap.exists() && snap.val() === emoji) {
+    await reactRef.remove();
+  } else {
+    await reactRef.set(emoji);
+  }
+}
+
+$("fileBtn").onclick = () => $("fileInput").click();
+
+$("fileInput").addEventListener("change", () => {
+  const file = $("fileInput").files[0];
+  if (!file) return;
+
+  if (file.size > 1024 * 1024) {
+    toast("File size should be less than 1MB.");
+    $("fileInput").value = "";
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    sendMessage("", {
+      name: file.name,
+      type: file.type || "application/octet-stream",
+      data: reader.result
+    });
+    $("fileInput").value = "";
+  };
+  reader.onerror = () => toast("Unable to read file.");
+  reader.readAsDataURL(file);
+});
+
+$("editTitleBtn").onclick = () => {
+  const newTitle = prompt("Enter new Chat Name:", $("roomTitle").textContent);
+  if (newTitle && newTitle.trim()) {
+    database.ref(`chatNames/${state.room}`).set(newTitle.trim());
+    toast("Chat name updated successfully!");
+  }
+};
+
+$("shareBtn").onclick = () => {
+  const shareUrl = `${location.origin}${location.pathname}?room=${encodeURIComponent(state.room)}`;
+  navigator.clipboard.writeText(shareUrl);
+  toast("Chat link copied to clipboard!");
+};
+
+// Theme Toggle Button Handler with 🔆 and 🌙
+const themeBtn = $("themeBtn");
+const circle = themeBtn.querySelector(".circle");
+
+themeBtn.addEventListener("click", () => {
+  const isLight = document.body.classList.toggle("light");
+
+  themeBtn.classList.toggle("active", isLight);
+  circle.textContent = isLight ? "🔆" : "🌙";
+  themeBtn.setAttribute("aria-pressed", String(isLight));
+});
+</script>
+</body>
+</html>
